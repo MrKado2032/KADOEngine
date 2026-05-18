@@ -8,4 +8,9 @@ namespace GraphicsKernel
 	void Destroy();
 
 	VkInstance GetVkInstance();
+	VkPhysicalDevice GetVkPhysicalDevice();
+	VkSurfaceKHR GetVkSurface();
+	VkDevice GetDevice();
+	VkQueue GetGraphicsQueue();
+	uint32_t GetGraphicsQueueIndex();
 }

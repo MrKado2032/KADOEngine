@@ -3,5 +3,5 @@
     <Platform Name="x64" />
     <Platform Name="x86" />
   </Configurations>
-  <Project Path="KADOEngine.vcxproj" />
+  <Project Path="KADOEngine.vcxproj" Id="7109ed06-3fce-427a-859f-81484103e2f1" />
 </Solution>
