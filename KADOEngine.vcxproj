@@ -139,6 +139,7 @@
     <ClCompile Include="source\Core\Window.cpp" />
     <ClCompile Include="source\Graphics\GLFWSurfaceProvider.cpp" />
     <ClCompile Include="source\Graphics\GraphicsKernel.cpp" />
+    <ClCompile Include="source\Graphics\Swapchain.cpp" />
     <ClCompile Include="source\main.cpp" />
   </ItemGroup>
   <ItemGroup>
@@ -148,6 +149,7 @@
     <ClInclude Include="source\Graphics\GLFWSurfaceProvider.h" />
     <ClInclude Include="source\Graphics\GraphicsKernel.h" />
     <ClInclude Include="source\Graphics\Interface\ISurfaceProvider.h" />
+    <ClInclude Include="source\Graphics\Swapchain.h" />
     <ClInclude Include="source\KADOEngine.h" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />

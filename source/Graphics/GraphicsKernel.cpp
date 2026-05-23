@@ -20,7 +20,12 @@ namespace GraphicsKernel
 	bool PickPhysicalDevice();
 	bool CreateDevice();
 	bool SetupDebugMessenger();
-	static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT severity, VkDebugUtilsMessageTypeFlagsEXT type, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void*);
+	static VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(
+		VkDebugUtilsMessageSeverityFlagBitsEXT severity, 
+		VkDebugUtilsMessageTypeFlagsEXT type, 
+		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, 
+		void*
+	);
 
 	bool Initialize(const char* appName, ISurfaceProvider* surfaceProvider)
 	{
@@ -67,7 +72,9 @@ namespace GraphicsKernel
 
 		if (s_vkDebugUtilsMessengerEXT)
 		{
-			auto vkDestroyDebugUtilsMessengerEXT = (PFN_vkDestroyDebugUtilsMessengerEXT)glfwGetInstanceProcAddress(s_vkInstance, "vkDestroyDebugUtilsMessengerEXT");
+			auto vkDestroyDebugUtilsMessengerEXT = 
+				(PFN_vkDestroyDebugUtilsMessengerEXT)glfwGetInstanceProcAddress(s_vkInstance, "vkDestroyDebugUtilsMessengerEXT");
+
 			vkDestroyDebugUtilsMessengerEXT(s_vkInstance, s_vkDebugUtilsMessengerEXT, nullptr);
 		}
 
@@ -255,12 +262,22 @@ namespace GraphicsKernel
 		debugUtilsMessageCreateInfo.sType = VK_STRUCTURE_TYPE_DEBUG_UTILS_MESSENGER_CREATE_INFO_EXT;
 		debugUtilsMessageCreateInfo.flags = 0;
 		debugUtilsMessageCreateInfo.pNext = nullptr;
-		debugUtilsMessageCreateInfo.messageSeverity = VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT;
-		debugUtilsMessageCreateInfo.messageType = VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT | VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT;
+		debugUtilsMessageCreateInfo.messageSeverity = 
+			VK_DEBUG_UTILS_MESSAGE_SEVERITY_ERROR_BIT_EXT | 
+			VK_DEBUG_UTILS_MESSAGE_SEVERITY_VERBOSE_BIT_EXT | 
+			VK_DEBUG_UTILS_MESSAGE_SEVERITY_WARNING_BIT_EXT;
+		debugUtilsMessageCreateInfo.messageType = 
+			VK_DEBUG_UTILS_MESSAGE_TYPE_GENERAL_BIT_EXT | 
+			VK_DEBUG_UTILS_MESSAGE_TYPE_PERFORMANCE_BIT_EXT | 
+			VK_DEBUG_UTILS_MESSAGE_TYPE_VALIDATION_BIT_EXT;
 		debugUtilsMessageCreateInfo.pfnUserCallback = VulkanDebugCallback;
 
-		auto vkCreateDebugUtilsMessengerEXT = (PFN_vkCreateDebugUtilsMessengerEXT)glfwGetInstanceProcAddress(s_vkInstance, "vkCreateDebugUtilsMessengerEXT");
-		if (vkCreateDebugUtilsMessengerEXT && vkCreateDebugUtilsMessengerEXT(s_vkInstance, &debugUtilsMessageCreateInfo, nullptr, &s_vkDebugUtilsMessengerEXT) != VK_SUCCESS)
+		auto vkCreateDebugUtilsMessengerEXT = 
+			(PFN_vkCreateDebugUtilsMessengerEXT)glfwGetInstanceProcAddress(s_vkInstance, "vkCreateDebugUtilsMessengerEXT");
+
+		if (vkCreateDebugUtilsMessengerEXT && 
+			vkCreateDebugUtilsMessengerEXT(s_vkInstance, &debugUtilsMessageCreateInfo, nullptr, &s_vkDebugUtilsMessengerEXT) != VK_SUCCESS
+			)
 		{
 			spdlog::error("failed to create debug utils messenger");
 			return false;
@@ -269,7 +286,12 @@ namespace GraphicsKernel
 		return true;
 	}
 
-	VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(VkDebugUtilsMessageSeverityFlagBitsEXT severity, VkDebugUtilsMessageTypeFlagsEXT type, const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, void*)
+	VKAPI_ATTR VkBool32 VKAPI_CALL VulkanDebugCallback(
+		VkDebugUtilsMessageSeverityFlagBitsEXT severity, 
+		VkDebugUtilsMessageTypeFlagsEXT type, 
+		const VkDebugUtilsMessengerCallbackDataEXT* pCallbackData, 
+		void*
+	)
 	{
 		spdlog::error("[Vulkan Layer] {}", pCallbackData->pMessage);
 		return VK_FALSE;
