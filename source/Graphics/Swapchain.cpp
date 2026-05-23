@@ -18,20 +18,9 @@ Swapchain::Swapchain(const SwapchainCreateInfo& createInfo) : m_device(createInf
 
 Swapchain::~Swapchain()
 {
-	if (!m_imageViews.empty())
-	{
-		for (auto& view : m_imageViews)
-		{
-			vkDestroyImageView(m_device, view, nullptr);
-			view = VK_NULL_HANDLE;
-		}
-		m_imageViews.clear();
-	}
+	Destroy_ImageViews();
 
-	if (m_vkSwapchain)
-	{
-		vkDestroySwapchainKHR(m_device, m_vkSwapchain, nullptr);
-	}
+	Destroy_Swapchain();
 }
 
 bool Swapchain::AcquireNextImage(VkSemaphore signalSemaphore, uint32_t& imageIndex) const
@@ -197,4 +186,25 @@ bool Swapchain::Create_ImageViews(VkDevice device)
 	}
 	
 	return true;
+}
+
+void Swapchain::Destroy_Swapchain()
+{
+	if (m_vkSwapchain)
+	{
+		vkDestroySwapchainKHR(m_device, m_vkSwapchain, nullptr);
+	}
+}
+
+void Swapchain::Destroy_ImageViews()
+{
+	if (!m_imageViews.empty())
+	{
+		for (auto& view : m_imageViews)
+		{
+			vkDestroyImageView(m_device, view, nullptr);
+			view = VK_NULL_HANDLE;
+		}
+		m_imageViews.clear();
+	}
 }

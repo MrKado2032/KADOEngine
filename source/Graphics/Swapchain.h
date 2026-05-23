@@ -25,6 +25,9 @@ private:
 	bool Create_Swapchain(const SwapchainCreateInfo& createInfo);
 	bool Create_ImageViews(VkDevice device);
 
+	void Destroy_Swapchain();
+	void Destroy_ImageViews();
+
 	VkSwapchainKHR m_vkSwapchain = VK_NULL_HANDLE;
 	std::vector<VkImage> m_images;
 	std::vector<VkImageView> m_imageViews;
