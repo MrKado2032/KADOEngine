@@ -253,6 +253,8 @@ namespace GraphicsKernel
 			return false;
 		}
 
+		vkGetDeviceQueue(s_vkDevice, s_GraphicsQueueIndex, 0, &s_GraphicsQueue);
+
 		return true;
 	}
 

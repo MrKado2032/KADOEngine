@@ -78,6 +78,74 @@ bool CommandContext::Submit(VkQueue queue, VkSemaphore signalSemaphore, VkSemaph
 	return true;
 }
 
+void CommandContext::DrawBegin(VkRenderingInfo& renderingInfo) const
+{
+	
+	vkCmdBeginRendering(m_vkCommandBuffer, &renderingInfo);
+}
+
+void CommandContext::DrawEnd() const
+{
+	vkCmdEndRendering(m_vkCommandBuffer);
+}
+
+void CommandContext::TransitionBarrier(
+	VkImage image, 
+	VkImageLayout oldLayout, 
+	VkImageLayout newLayout, 
+	VkAccessFlags2 srcAccessMask, 
+	VkAccessFlags2 dstAccessMask, 
+	VkPipelineStageFlags2 srcStageMask, 
+	VkPipelineStageFlags2 dstStageMask
+) const
+{
+	VkImageMemoryBarrier2 barrier{};
+	barrier.sType = VK_STRUCTURE_TYPE_IMAGE_MEMORY_BARRIER_2;
+	barrier.pNext = nullptr;
+	barrier.image = image;
+	barrier.oldLayout = oldLayout;
+	barrier.newLayout = newLayout;
+	barrier.srcAccessMask = srcAccessMask;
+	barrier.dstAccessMask = dstAccessMask;
+	barrier.srcStageMask = srcStageMask;
+	barrier.dstStageMask = dstStageMask;
+	barrier.subresourceRange.aspectMask = VK_IMAGE_ASPECT_COLOR_BIT;
+	barrier.subresourceRange.baseArrayLayer = 0;
+	barrier.subresourceRange.baseMipLevel = 0;
+	barrier.subresourceRange.layerCount = 1;
+	barrier.subresourceRange.levelCount = 1;
+
+	VkDependencyInfo depedencyInfo{};
+	depedencyInfo.sType = VK_STRUCTURE_TYPE_DEPENDENCY_INFO;
+	depedencyInfo.pNext = nullptr;
+	depedencyInfo.imageMemoryBarrierCount = 1;
+	depedencyInfo.pImageMemoryBarriers = &barrier;
+
+	vkCmdPipelineBarrier2(m_vkCommandBuffer, &depedencyInfo);
+}
+
+void CommandContext::ClearColorScreen(VkImageView view, float r, float g, float b, float a) const
+{
+	VkRenderingAttachmentInfo colorAttachment{};
+	colorAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+	colorAttachment.pNext = nullptr;
+	colorAttachment.imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+	colorAttachment.clearValue.color = { r, g, b, a };
+	colorAttachment.imageView = view;
+	
+	VkRenderingInfo renderingInfo{};
+	renderingInfo.sType = VK_STRUCTURE_TYPE_RENDERING_INFO;
+	renderingInfo.pNext = nullptr;
+	renderingInfo.colorAttachmentCount = 1;
+	renderingInfo.pColorAttachments = &colorAttachment;
+
+	DrawBegin(renderingInfo);
+
+	vkCmdBeginRendering(m_vkCommandBuffer, &renderingInfo);
+}
+
 void CommandContext::Create_CommandPool(VkDevice device, uint32_t queueFamilyIndex)
 {
 	VkCommandPoolCreateInfo cmdPoolCreateInfo{};

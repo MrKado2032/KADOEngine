@@ -1,6 +1,7 @@
 #pragma once
 #include <memory>
 
+class Renderer;
 class Window;
 class Application
 {
@@ -19,6 +20,7 @@ protected:
 
 private:
 	std::unique_ptr<Window> m_window;
+	std::unique_ptr<Renderer> m_renderer;
 };
 
 std::unique_ptr<Application> CreateApplication();

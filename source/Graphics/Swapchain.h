@@ -21,6 +21,10 @@ public:
 	bool AcquireNextImage(VkSemaphore signalSemaphore, uint32_t& imageIndex) const;
 	bool Present(VkQueue queue, VkSemaphore waitSemaphore, uint32_t imageIndex);
 
+	uint32_t GetImageCount() const { return m_imageCount; }
+	VkImage GetVkImageFromImageIndex(uint32_t imageIndex) const { return m_images[imageIndex]; }
+	VkImageView GetVkImageViewFromImageIndex(uint32_t imageIndex) const { return m_imageViews[imageIndex]; }
+
 private:
 	bool Create_Swapchain(const SwapchainCreateInfo& createInfo);
 	bool Create_ImageViews(VkDevice device);

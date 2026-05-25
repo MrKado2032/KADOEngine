@@ -5,6 +5,7 @@
 #include "Core/Window.h"
 #include "Graphics/GLFWSurfaceProvider.h"
 #include "Graphics/GraphicsKernel.h"
+#include "Graphics/Renderer.h"
 
 Application::Application()
 {
@@ -17,11 +18,17 @@ Application::Application()
 		throw std::runtime_error("failed to initialize graphics kernel");
 	}
 
+	m_renderer = std::make_unique<Renderer>();
+
 	spdlog::info("Success Initialized application");
 }
 
 Application::~Application()
 {
+	if (m_renderer)
+	{
+		m_renderer.reset();
+	}
 	GraphicsKernel::Destroy();
 
 	if (m_window)
@@ -38,6 +45,9 @@ void Application::Run()
 	while (m_window->IsRunning())
 	{
 		m_window->UpdateEvents();
+
+		m_renderer->BeginFrame();
 		Update(1);
+		m_renderer->EndFrame();
 	}
 }
