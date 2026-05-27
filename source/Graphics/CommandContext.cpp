@@ -78,9 +78,23 @@ bool CommandContext::Submit(VkQueue queue, VkSemaphore signalSemaphore, VkSemaph
 	return true;
 }
 
-void CommandContext::DrawBegin(VkRenderingInfo& renderingInfo) const
+void CommandContext::DrawBegin(VkImageView view) const
 {
-	
+	VkRenderingAttachmentInfo colorAttachment{};
+	colorAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
+	colorAttachment.pNext = nullptr;
+	colorAttachment.imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
+	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
+	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
+	colorAttachment.clearValue.color = { 0.1f, 0.1f, 0.1f, 1.0f };
+	colorAttachment.imageView = view;
+
+	VkRenderingInfo renderingInfo{};
+	renderingInfo.sType = VK_STRUCTURE_TYPE_RENDERING_INFO;
+	renderingInfo.pNext = nullptr;
+	renderingInfo.colorAttachmentCount = 1;
+	renderingInfo.pColorAttachments = &colorAttachment;
+
 	vkCmdBeginRendering(m_vkCommandBuffer, &renderingInfo);
 }
 
@@ -122,28 +136,6 @@ void CommandContext::TransitionBarrier(
 	depedencyInfo.pImageMemoryBarriers = &barrier;
 
 	vkCmdPipelineBarrier2(m_vkCommandBuffer, &depedencyInfo);
-}
-
-void CommandContext::ClearColorScreen(VkImageView view, float r, float g, float b, float a) const
-{
-	VkRenderingAttachmentInfo colorAttachment{};
-	colorAttachment.sType = VK_STRUCTURE_TYPE_RENDERING_ATTACHMENT_INFO;
-	colorAttachment.pNext = nullptr;
-	colorAttachment.imageLayout = VK_IMAGE_LAYOUT_COLOR_ATTACHMENT_OPTIMAL;
-	colorAttachment.loadOp = VK_ATTACHMENT_LOAD_OP_CLEAR;
-	colorAttachment.storeOp = VK_ATTACHMENT_STORE_OP_STORE;
-	colorAttachment.clearValue.color = { r, g, b, a };
-	colorAttachment.imageView = view;
-	
-	VkRenderingInfo renderingInfo{};
-	renderingInfo.sType = VK_STRUCTURE_TYPE_RENDERING_INFO;
-	renderingInfo.pNext = nullptr;
-	renderingInfo.colorAttachmentCount = 1;
-	renderingInfo.pColorAttachments = &colorAttachment;
-
-	DrawBegin(renderingInfo);
-
-	vkCmdBeginRendering(m_vkCommandBuffer, &renderingInfo);
 }
 
 void CommandContext::Create_CommandPool(VkDevice device, uint32_t queueFamilyIndex)

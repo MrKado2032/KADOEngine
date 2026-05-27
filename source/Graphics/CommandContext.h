@@ -15,7 +15,7 @@ public:
 	bool Reset() const;
 	bool Submit(VkQueue queue, VkSemaphore signalSemaphore, VkSemaphore waitSemaphore, VkFence fence) const;
 
-	void DrawBegin(VkRenderingInfo& renderingInfo) const;
+	void DrawBegin(VkImageView view) const;
 	void DrawEnd() const;
 
 	void TransitionBarrier(
@@ -27,8 +27,6 @@ public:
 		VkPipelineStageFlags2 srcStageMask,
 		VkPipelineStageFlags2 dstStageMask
 	) const;
-
-	void ClearColorScreen(VkImageView view, float r, float g, float b, float a = 1.f) const;
 
 private:
 	void Create_CommandPool(VkDevice device, uint32_t queueFamilyIndex);

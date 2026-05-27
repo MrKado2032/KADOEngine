@@ -13,4 +13,6 @@ namespace GraphicsKernel
 	VkDevice GetDevice();
 	VkQueue GetGraphicsQueue();
 	uint32_t GetGraphicsQueueIndex();
+
+	uint32_t FindMemoryType(uint32_t typeFilter, VkMemoryPropertyFlags properties);
 }

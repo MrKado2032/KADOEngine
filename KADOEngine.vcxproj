@@ -137,6 +137,7 @@
   <ItemGroup>
     <ClCompile Include="source\Application.cpp" />
     <ClCompile Include="source\Core\Window.cpp" />
+    <ClCompile Include="source\Graphics\Buffer.cpp" />
     <ClCompile Include="source\Graphics\CommandContext.cpp" />
     <ClCompile Include="source\Graphics\GLFWSurfaceProvider.cpp" />
     <ClCompile Include="source\Graphics\GraphicsKernel.cpp" />
@@ -148,6 +149,7 @@
     <ClInclude Include="source\Application.h" />
     <ClInclude Include="source\Core\Window.h" />
     <ClInclude Include="source\EntryPoint.h" />
+    <ClInclude Include="source\Graphics\Buffer.h" />
     <ClInclude Include="source\Graphics\CommandContext.h" />
     <ClInclude Include="source\Graphics\GLFWSurfaceProvider.h" />
     <ClInclude Include="source\Graphics\GraphicsKernel.h" />

@@ -4,6 +4,7 @@
 #include <array>
 #include <memory>
 
+class Window;
 class Swapchain;
 class CommandContext;
 class Renderer
@@ -11,7 +12,7 @@ class Renderer
 public:
 	static constexpr uint32_t kFrameCount = 2;
 
-	Renderer();
+	Renderer(const Window& window);
 	~Renderer();
 
 	void BeginFrame();

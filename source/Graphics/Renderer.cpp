@@ -1,12 +1,21 @@
 #include "Renderer.h"
 #include <spdlog/spdlog.h>
 
+#include "../Core/Window.h"
+#include "GLFWSurfaceProvider.h"
 #include "GraphicsKernel.h"
 #include "Swapchain.h"
 #include "CommandContext.h"
 
-Renderer::Renderer()
+Renderer::Renderer(const Window& window)
 {
+	GLFWSurfaceProvider surfaceProvider(window.GetGLFWWindow());
+	if (!GraphicsKernel::Initialize("KADOEngine", &surfaceProvider))
+	{
+		spdlog::error("failed to initialize graphics kernel");
+		throw std::runtime_error("failed to initialize graphics kernel");
+	}
+	
 	Create_CommandContext();
 
 	Create_Swapchain();
@@ -27,6 +36,8 @@ Renderer::~Renderer()
 	Destroy_Swapchain();
 	Destroy_CommandContext();
 
+	GraphicsKernel::Destroy();
+
 	spdlog::info("Destroy Renderer");
 }
 
@@ -44,6 +55,10 @@ void Renderer::BeginFrame()
 	frame.commandContext->Begin();
 
 	const bool bResult = m_swapchain->AcquireNextImage(frame.imageAvailableSemaphore, m_imageIndex);
+	if (!bResult)
+	{
+
+	}
 
 	frame.commandContext->TransitionBarrier(
 		m_swapchain->GetVkImageFromImageIndex(m_imageIndex),
@@ -55,7 +70,7 @@ void Renderer::BeginFrame()
 		VK_PIPELINE_STAGE_2_COLOR_ATTACHMENT_OUTPUT_BIT
 	);
 
-	frame.commandContext->ClearColorScreen(m_swapchain->GetVkImageViewFromImageIndex(m_imageIndex), 0.1f, 0.1f, 0.1f);
+	frame.commandContext->DrawBegin(m_swapchain->GetVkImageViewFromImageIndex(m_imageIndex));
 }
 
 void Renderer::EndFrame()
@@ -78,13 +93,17 @@ void Renderer::EndFrame()
 
 	frame.commandContext->End();
 
-	const bool result = frame.commandContext->Submit(GraphicsKernel::GetGraphicsQueue(), m_renderCompleteSemaphore[m_currentFrameIndex], frame.imageAvailableSemaphore, frame.fence);
-	if (!result)
+	bool bResult = frame.commandContext->Submit(GraphicsKernel::GetGraphicsQueue(), m_renderCompleteSemaphore[m_currentFrameIndex], frame.imageAvailableSemaphore, frame.fence);
+	if (!bResult)
 	{
 		spdlog::error("failed to submit");
 	}
 
-	m_swapchain->Present(GraphicsKernel::GetGraphicsQueue(), m_renderCompleteSemaphore[m_currentFrameIndex], m_imageIndex);
+	bResult = m_swapchain->Present(GraphicsKernel::GetGraphicsQueue(), m_renderCompleteSemaphore[m_currentFrameIndex], m_imageIndex);
+	if (!bResult)
+	{
+
+	}
 
 	m_currentFrameIndex = (m_currentFrameIndex + 1) % kFrameCount;
 }
